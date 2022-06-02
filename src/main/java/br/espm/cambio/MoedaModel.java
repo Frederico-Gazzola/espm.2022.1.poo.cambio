@@ -26,7 +26,7 @@ public class MoedaModel {
     }
 
     public MoedaModel(Moeda moeda) {
-        this.idMoeda = moeda.GetId().toString();
+        this.idMoeda = moeda.getId().toString();
         this.txNome = moeda.getNome();
         this.txSimbolo = moeda.getSimbolo();
     }

@@ -12,7 +12,7 @@ public class Moeda {
         this.id = id;
     }
 
-    public UUID GetId() {
+    public UUID getId() {
         return id;
     }
 
