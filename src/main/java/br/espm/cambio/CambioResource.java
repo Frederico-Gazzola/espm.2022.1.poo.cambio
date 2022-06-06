@@ -72,9 +72,7 @@ public class CambioResource {
 
     @GetMapping("/cotacao/{simbolo:[a-zA-Z]{3}}")
     public List<Cotacao> findCotacaoBySimbolo(@PathVariable String simbolo) {
-        List<Cotacao> cs = cotacaoService.findBySimbolo(simbolo);
-        cs.forEach(c -> c.setId(null));
-        return cs;
+        return cotacaoService.findBySimbolo(simbolo);
     }
 
     @RequestMapping(path = "/cotacao/{simbolo}/{ano}/{mes}/{dia}", method = RequestMethod.POST)
