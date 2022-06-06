@@ -1,6 +1,7 @@
 package br.espm.cambio;
 
 import java.util.List;
+
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -40,6 +41,19 @@ public class MoedaService {
         .orElse(null);
     }
 
+    public Moeda findById(UUID id) {
+        return moedaRepository.findById(id.toString())
+                    .map(MoedaModel::to)
+                    .orElse(null);
+    }
+
+    public void delete(String id) {
+        moedaRepository.deleteById(id);
+    }
+
+    public void deleteBySimbolo(String simbolo){
+        moedaRepository.deleteBySimbolo(simbolo);
+    }
     
 
 }

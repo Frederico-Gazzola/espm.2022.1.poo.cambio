@@ -1,12 +1,19 @@
 package br.espm.cambio;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -14,11 +21,9 @@ public class CambioResource {
 
     @Autowired
     private MoedaService moedaService;
-    
-    @GetMapping("/hello")
-    public String helloWorld() {
-        return "Hello ESPM";
-    }
+
+    @Autowired
+    private CotacaoService cotacaoService;
 
     @GetMapping("/moeda")
     public List<Moeda> listMoeda() {
@@ -33,13 +38,52 @@ public class CambioResource {
 
     @GetMapping("/moeda/{simbolo}")
     public Moeda findMoedaBySimbolo (@PathVariable String simbolo) {
-        return null;
+        return moedaService.findBySimbolo(simbolo);
     }
 
     @PostMapping("/moeda")
     public void save(@RequestBody Moeda moeda) {
         moedaService.create(moeda);
         //moedas.add(moeda);
+    }
+
+    @GetMapping("/moeda/{id}")
+    public Moeda findMoedaById(@PathVariable String id) {
+        UUID uuid = UUID.fromString(id);
+        return moedaService.findById(uuid);
+    }
+
+    @DeleteMapping("/moeda/{id}")
+    public void delete(@PathVariable String id){
+        moedaService.delete(id);
+    }
+
+
+    @DeleteMapping("/moeda/{simbolo}")
+    public ResponseEntity<HttpStatus> deleteBySimbolo(@PathVariable String simbolo){
+        try {
+            moedaService.deleteBySimbolo(simbolo);  
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+             
+    }
+
+    @GetMapping("/cotacao/{simbolo}")
+    public List<Cotacao> findCotacaoBySimbolo(@PathVariable String simbolo) {
+        List<Cotacao> cs = cotacaoService.findBySimbolo(simbolo);
+        cs.forEach(c -> c.setId(null));
+        return cs;
+    }
+
+    @RequestMapping(path = "/cotacao/{simbolo}/{ano}/{mes}/{dia}", method = RequestMethod.POST)
+    public void save(@PathVariable String simbolo, @PathVariable String ano, @PathVariable String mes, @PathVariable String dia, @RequestBody Cotacao cotacao){
+        LocalDate data = LocalDate.parse(ano + "-" + mes + "-" + dia);
+        cotacao.setDtData(data);
+        UUID id = moedaService.findBySimbolo(simbolo).getId();
+        cotacao.setIdMoeda(id);
+        cotacaoService.create(cotacao);
     }
 
 }
