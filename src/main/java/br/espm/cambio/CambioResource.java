@@ -79,7 +79,7 @@ public class CambioResource {
 
     @RequestMapping(path = "/cotacao/{simbolo}/{ano}/{mes}/{dia}", method = RequestMethod.POST)
     public void save(@PathVariable String simbolo, @PathVariable String ano, @PathVariable String mes, @PathVariable String dia, @RequestBody Cotacao cotacao){
-        LocalDate data = LocalDate.parse(ano + "-" + mes + "-" + dia);
+        LocalDate data = LocalDate.parse(ano + "." + mes + "." + dia);
         cotacao.setDtData(data);
         UUID id = moedaService.findBySimbolo(simbolo).getId();
         cotacao.setIdMoeda(id);
