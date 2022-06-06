@@ -36,7 +36,7 @@ public class CambioResource {
         return moedaService.listaAll();
     }
 
-    @GetMapping("/moeda/{simbolo}")
+    @GetMapping("/moeda/{simbolo:[a-zA-Z]{3}}")
     public Moeda findMoedaBySimbolo (@PathVariable String simbolo) {
         return moedaService.findBySimbolo(simbolo);
     }
@@ -47,19 +47,19 @@ public class CambioResource {
         //moedas.add(moeda);
     }
 
-    @GetMapping("/moeda/{id}")
+    @GetMapping("/moeda/{id:[a-f0-9]{8}(?:-[a-f0-9]{4}){4}[a-f0-9]{8}}")
     public Moeda findMoedaById(@PathVariable String id) {
         UUID uuid = UUID.fromString(id);
         return moedaService.findById(uuid);
     }
 
-    @DeleteMapping("/moeda/{id}")
+    @DeleteMapping("/moeda/{id:[a-f0-9]{8}(?:-[a-f0-9]{4}){4}[a-f0-9]{8}}")
     public void delete(@PathVariable String id){
         moedaService.delete(id);
     }
 
 
-    @DeleteMapping("/moeda/{simbolo}")
+    @DeleteMapping("/moeda/{simbolo:[A-Z]{3,}}")
     public ResponseEntity<HttpStatus> deleteBySimbolo(@PathVariable String simbolo){
         try {
             moedaService.deleteBySimbolo(simbolo);  
@@ -70,7 +70,7 @@ public class CambioResource {
              
     }
 
-    @GetMapping("/cotacao/{simbolo}")
+    @GetMapping("/cotacao/{simbolo:[a-zA-Z]{3}}")
     public List<Cotacao> findCotacaoBySimbolo(@PathVariable String simbolo) {
         List<Cotacao> cs = cotacaoService.findBySimbolo(simbolo);
         cs.forEach(c -> c.setId(null));
